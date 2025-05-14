@@ -6,7 +6,7 @@ A full-stack music streaming application with a Spring Boot backend (API) and Re
 
 The project is divided into two main components:
 
-### 1. spotify-api (Spring Boot Backend)
+### 1. spectrum-api (Spring Boot Backend)
 
 The backend provides a RESTful API for managing music data and integrates with the Lidarr API for fetching music metadata.
 
@@ -19,7 +19,7 @@ The backend provides a RESTful API for managing music data and integrates with t
   - H2 in-memory database with sample data for development
   - Cross-origin resource sharing (CORS) support
 
-### 2. spotify-ui (React Electron Frontend)
+### 2. spectrum-ui (React Electron Frontend)
 
 The frontend provides a modern music streaming interface, packaged as a desktop application using Electron.
 
@@ -45,9 +45,9 @@ The frontend provides a modern music streaming interface, packaged as a desktop 
 
 ### Running the Backend (Spring Boot)
 
-1. Navigate to the `spotify-api` directory:
+1. Navigate to the `spectrum-api` directory:
    ```
-   cd spotify-api
+   cd spectrum-api
    ```
 
 2. Build the application using Maven:
@@ -66,9 +66,9 @@ The frontend provides a modern music streaming interface, packaged as a desktop 
 
 ### Running the Frontend (React Electron)
 
-1. Navigate to the `spotify-ui` directory:
+1. Navigate to the `spectrum-ui` directory:
    ```
-   cd spotify-ui
+   cd spectrum-ui
    ```
 
 2. Install dependencies:

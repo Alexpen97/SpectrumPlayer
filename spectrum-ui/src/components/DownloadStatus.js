@@ -182,7 +182,7 @@ const DownloadStatus = ({ albumId, artistId }) => {
       ) : uiState.showDownloadButton ? (
         <div>
           <button 
-            className="download-button spotify-button" 
+            className="download-button spectrum-button" 
             onClick={requestDownload}
             disabled={uiState.isRequesting}
           >

@@ -39,8 +39,8 @@
     cursor: not-allowed;
   }
   
-  /* Spotify-style button */
-  .spotify-button {
+  /* Spectrum-style button */
+  .spectrum-button {
     background-color: #1ed760;
     color: #000;
     border: none;
@@ -51,12 +51,12 @@
     gap: 8px;
   }
   
-  .spotify-button:hover:not(:disabled) {
+  .spectrum-button:hover:not(:disabled) {
     background-color: #1fdf64;
     transform: scale(1.04);
   }
   
-  .spotify-button:disabled {
+  .spectrum-button:disabled {
     background-color: rgba(30, 215, 96, 0.3);
     color: rgba(0, 0, 0, 0.5);
   }
