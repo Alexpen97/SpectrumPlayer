@@ -54,6 +54,14 @@ node_modules/
 /out
 spotify-ui/dist/
 spotify-ui/build/
+spectrum-ui/dist/
+spectrum-ui/build/
+
+# Electron build files
+*.exe
+**/*.exe
+**/*.asar
+**/win-unpacked/
 
 # Environment variables
 .env
