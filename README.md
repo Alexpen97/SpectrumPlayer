@@ -1,6 +1,6 @@
-# Spotify Clone Project
+# SpectrumPlayer
 
-A full-stack Spotify clone application with a Spring Boot backend (API) and React Electron frontend (UI).
+A full-stack music streaming application with a Spring Boot backend (API) and React Electron frontend (UI). SpectrumPlayer offers a beautiful, intuitive interface for managing and streaming your music library with integrated metadata retrieval through Lidarr.
 
 ## Project Structure
 
@@ -21,16 +21,18 @@ The backend provides a RESTful API for managing music data and integrates with t
 
 ### 2. spotify-ui (React Electron Frontend)
 
-The frontend provides a user interface similar to Spotify, packaged as a desktop application using Electron.
+The frontend provides a modern music streaming interface, packaged as a desktop application using Electron.
 
 - **Framework**: React 18
 - **Desktop Integration**: Electron
 - **Features**:
-  - Modern UI similar to Spotify
-  - Music playback controls
-  - Library management
+  - Modern, sleek UI with intuitive controls
+  - Advanced music playback controls
+  - Comprehensive library management
   - Playlist creation and management
-  - Search functionality
+  - Powerful search functionality
+  - Offline music support
+  - Visualized audio spectrum display
 
 ## Setup and Installation
 
@@ -175,4 +177,4 @@ Replace with your Lidarr instance details.
 
 ## License
 
-This project is for educational purposes only and is not affiliated with Spotify or Lidarr.
+This project is for educational purposes only and is not affiliated with any commercial music streaming service or Lidarr.
