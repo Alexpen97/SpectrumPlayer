@@ -1,0 +1,327 @@
+.track-list {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.track-list-header {
+  display: grid;
+  grid-template-columns: 50px 1fr 120px;
+  padding: 0 16px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.track-list-body {
+  margin-top: 8px;
+}
+
+.track-item {
+  display: grid;
+  grid-template-columns: 50px 1fr 120px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.track-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Playing state styling */
+.track-item.playing {
+  background-color: rgba(29, 185, 84, 0.2);
+}
+
+.track-item.playing:hover {
+  background-color: rgba(29, 185, 84, 0.3);
+}
+
+.track-item.playing .track-name {
+  color: #1DB954;
+}
+
+.track-item:hover .track-index {
+  opacity: 0;
+}
+
+.track-item.playing .track-index {
+  opacity: 0;
+}
+
+.track-item:hover .track-play-button,
+.track-item.playing .track-play-button {
+  display: flex;
+}
+
+.track-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  position: relative;
+  width: 50px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.track-index {
+  position: absolute;
+  left: 20px;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.track-play-button {
+  display: none; /* Hidden by default, shown on hover */
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.track-play-button:hover {
+  color: white;
+}
+
+.track-item:hover .track-play-button {
+  display: flex;
+  opacity: 1;
+}
+
+.track-item:hover .track-index {
+  opacity: 0;
+}
+
+.track-item.playing .track-play-button {
+  display: flex;
+  opacity: 1;
+  color: #1DB954;
+}
+
+/* Always show the lock icon for locked tracks on hover */
+.track-item:hover .track-play-button.locked {
+  display: flex;
+}
+
+.track-title {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.track-name {
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-artist {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.track-like, .track-more, .track-add-to-playlist {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  padding: 8px;
+  display: none;
+  font-size: 14px;
+}
+
+.track-add-to-playlist {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-item:hover .track-like,
+.track-item:hover .track-more,
+.track-item:hover .track-add-to-playlist {
+  display: flex;
+}
+
+.track-duration {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin: 0 8px;
+}
+
+/* Locked track styling */
+.track-item:hover .track-name.locked {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.track-locked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+/* Request button styling */
+.track-request-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+  margin-right: 8px;
+}
+
+.track-request-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.track-request-button i {
+  margin-right: 4px;
+}
+
+.track-request-button.loading {
+  pointer-events: none;
+}
+
+.track-request-button .spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+.track-request-button.success {
+  background-color: rgba(29, 185, 84, 0.3);
+  color: #1DB954;
+}
+
+.track-request-button.error {
+  background-color: rgba(255, 0, 0, 0.3);
+  color: #ff5555;
+}
+
+/* Playlist dropdown styles */
+.track-playlist-actions {
+  position: relative;
+}
+
+.playlist-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background-color: #282828;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  overflow: hidden;
+  max-height: 300px;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-header span {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.dropdown-header button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.playlist-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.playlist-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-dropdown li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.loading-playlists, .no-playlists {
+  padding: 15px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .track-list-header,
+  .track-item {
+    grid-template-columns: 40px 1fr 80px;
+    padding: 8px;
+  }
+  
+  .track-actions {
+    justify-content: center;
+  }
+  
+  .track-like, .track-more {
+    padding: 4px;
+  }
+}

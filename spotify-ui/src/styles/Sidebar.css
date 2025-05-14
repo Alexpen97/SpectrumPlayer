@@ -1,0 +1,180 @@
+.sidebar {
+  width: 240px;
+  background-color: #000000;
+  color: #b3b3b3;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px;
+}
+
+.logo {
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.logo h1 {
+  font-size: 24px;
+  color: white;
+}
+
+.sidebar-menu {
+  margin-bottom: 20px;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #b3b3b3;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  border-radius: 4px;
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+  color: #ffffff;
+}
+
+.sidebar-menu a.active {
+  background-color: #282828;
+}
+
+.icon {
+  margin-right: 15px;
+}
+
+.create-playlist, .liked-songs {
+  margin-bottom: 10px;
+}
+
+.create-playlist button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.create-playlist button:hover {
+  color: #ffffff;
+}
+
+.liked-songs a {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: #b3b3b3;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.liked-songs a:hover, .liked-songs a.active {
+  color: #ffffff;
+}
+
+.divider {
+  height: 1px;
+  background-color: #282828;
+  margin: 10px 0;
+}
+
+.playlists {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.playlists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.playlists-header h3 {
+  color: #b3b3b3;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.add-playlist-button {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 16px;
+  transition: color 0.2s ease;
+}
+
+.add-playlist-button:hover {
+  color: #ffffff;
+}
+
+.playlists ul {
+  list-style: none;
+}
+
+.playlists ul li a {
+  display: block;
+  padding: 8px 10px;
+  color: #b3b3b3;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-size: 14px;
+}
+
+.playlists ul li a:hover {
+  color: #ffffff;
+}
+
+.create-playlist-form {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.create-playlist-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: white;
+}
+
+.create-playlist-form button {
+  width: 100%;
+  padding: 8px;
+  background-color: #1DB954;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.create-playlist-form button:hover {
+  background-color: #1ed760;
+}
+
+.loading-playlists, .no-playlists {
+  padding: 10px;
+  color: #b3b3b3;
+  font-size: 14px;
+  font-style: italic;
+}

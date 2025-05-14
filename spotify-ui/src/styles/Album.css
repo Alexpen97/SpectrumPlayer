@@ -1,0 +1,360 @@
+:root {
+  --album-color: rgb(20, 40, 80);
+  --album-gradient: linear-gradient(to bottom, rgb(20, 40, 80), rgb(0, 0, 0));
+}
+
+.album-page {
+  --theme-color: var(--album-color);
+  color: white;
+  padding-bottom: 100px;
+}
+
+.album-header {
+  display: flex;
+  padding: 32px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  min-height: 300px;
+  align-items: flex-end;
+  position: relative;
+}
+
+.album-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+/* Removed the ::before pseudo-element that was causing the duplicate gradient */
+
+.album-header-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 1;
+  margin-left: 24px;
+}
+
+.album-cover {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.album-cover img {
+  width: 232px;
+  height: 232px;
+  box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+  object-fit: cover;
+}
+
+.album-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.album-type {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.album-title {
+  font-size: 72px;
+  font-weight: 900;
+  margin: 0 0 8px;
+  line-height: 1.1;
+}
+
+.album-meta {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+}
+
+.album-meta span {
+  margin-right: 4px;
+}
+
+.artist-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.artist-link:hover {
+  text-decoration: underline;
+}
+
+.album-content {
+  padding: 24px 32px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
+  min-height: 300px;
+  position: relative;
+  z-index: 1;
+}
+
+.album-actions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.album-actions button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 16px;
+  padding: 8px;
+}
+
+.like-button, .more-button {
+  font-size: 20px;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.like-button:hover, .more-button:hover {
+  opacity: 1;
+}
+
+.album-genres {
+  margin-top: 32px;
+}
+
+.album-genres h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.genre-tag {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+.album-about {
+  margin-top: 32px;
+}
+
+.album-about h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.album-about p {
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.no-tracks {
+  padding: 32px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.loading-container, .error-container, .not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 32px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #1DB954;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-container button, .not-found-container .back-link {
+  background-color: #1DB954;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.error-container button:hover, .not-found-container .back-link:hover {
+  background-color: #1ed760;
+  transform: scale(1.05);
+}
+
+/* Download button styles */
+.album-actions .download-button {
+  padding: 8px 16px;
+  background-color: #1db954;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.album-actions .download-button:hover {
+  background-color: #1ed760;
+}
+
+.album-actions .download-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+.download-status {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.download-status .status-text {
+  margin-bottom: 8px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.download-status .progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.download-status .progress-fill {
+  height: 100%;
+  background: #1db954;
+  transition: width 0.3s ease;
+}
+
+.download-status .error-message {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(255, 59, 48, 0.1);
+  border-left: 3px solid #ff3b30;
+  color: #ffcccc;
+  font-size: 0.9em;
+  line-height: 1.4;
+  max-height: 100px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.download-status .estimated-time {
+  margin-top: 8px;
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+.album-actions .download-message {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  animation: fadeIn 0.3s;
+  margin-left: 16px;
+}
+
+.download-button .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+.download-message {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  animation: fadeIn 0.3s;
+  margin-left: 16px;
+}
+
+.download-message.success {
+  background-color: rgba(29, 185, 84, 0.2);
+  color: #1DB954;
+}
+
+.download-message.error {
+  background-color: rgba(255, 0, 0, 0.2);
+  color: #ff5555;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .album-header {
+    padding: 16px;
+    flex-direction: column;
+  }
+  
+  .album-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .album-cover {
+    margin-right: 0;
+    margin-bottom: 16px;
+  }
+  
+  .album-cover img {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .album-title {
+    font-size: 42px;
+  }
+  
+  .album-content {
+    padding: 16px;
+  }
+}

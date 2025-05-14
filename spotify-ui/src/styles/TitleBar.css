@@ -1,0 +1,63 @@
+.title-bar {
+  -webkit-app-region: drag;
+  height: 32px;
+  background-color: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  color: #b3b3b3;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid #282828;
+  user-select: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.title-bar-drag-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.app-title {
+  margin-left: 8px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.window-controls {
+  -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+}
+
+.window-control {
+  -webkit-app-region: no-drag;
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b3b3b3;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.window-control:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.window-control.close:hover {
+  background-color: #e81123;
+  color: white;
+}
+
+/* Title bar is fixed at the top, no need for additional adjustments in this file */

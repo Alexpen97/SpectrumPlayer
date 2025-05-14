@@ -1,0 +1,293 @@
+.artist-page {
+  padding: 0;
+  color: #fff;
+  background: linear-gradient(to bottom, #121212, #000000);
+  min-height: 100vh;
+}
+
+/* Artist header */
+.artist-header {
+  padding: 100px 32px 24px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 340px;
+}
+
+.artist-info {
+  z-index: 2;
+}
+
+.verified-badge {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.verified-badge .checkmark {
+  margin-left: 4px;
+  color: #3d91f4;
+}
+
+.artist-info h1 {
+  font-size: 72px;
+  font-weight: 900;
+  margin: 0 0 24px;
+  letter-spacing: -1px;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.monthly-listeners {
+  font-size: 16px;
+  color: #b3b3b3;
+  margin: 0;
+}
+
+/* Action buttons */
+.artist-actions {
+  display: flex;
+  align-items: center;
+  padding: 24px 32px;
+  gap: 16px;
+}
+
+.play-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #1db954;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-button svg {
+  width: 24px;
+  height: 24px;
+  color: #000;
+}
+
+.play-button:hover {
+  transform: scale(1.05);
+  background-color: #1ed760;
+}
+
+.follow-button {
+  background: transparent;
+  border: 1px solid #b3b3b3;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.follow-button:hover {
+  border-color: #fff;
+}
+
+.more-button {
+  background: transparent;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.more-button:hover {
+  color: #fff;
+}
+
+/* Popular tracks section */
+.popular-section {
+  padding: 0 32px 32px;
+}
+
+.popular-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.popular-tracks table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.track-row {
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.track-row:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.track-number {
+  width: 40px;
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 16px;
+  padding: 12px 0;
+}
+
+.track-info {
+  padding: 12px 16px;
+}
+
+.track-title {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.track-album {
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
+.track-plays {
+  text-align: right;
+  color: #b3b3b3;
+  font-size: 14px;
+  padding: 12px 16px;
+}
+
+.track-duration {
+  text-align: right;
+  color: #b3b3b3;
+  font-size: 14px;
+  padding: 12px 16px;
+  width: 60px;
+}
+
+/* Discography section */
+.discography-section {
+  padding: 32px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-button {
+  background: transparent;
+  border: 1px solid #b3b3b3;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover {
+  border-color: #fff;
+}
+
+.filter-button.active {
+  background-color: #fff;
+  color: #000;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+/* About section */
+.about-section {
+  padding: 32px;
+}
+
+.about-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.about-content {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.artist-image {
+  flex: 0 0 240px;
+}
+
+.artist-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+}
+
+.artist-bio {
+  flex: 1;
+}
+
+.artist-bio p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #b3b3b3;
+  margin-bottom: 24px;
+}
+
+.artist-stats {
+  margin-top: 32px;
+}
+
+.monthly-listeners-large h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.monthly-listeners-large p {
+  font-size: 14px;
+  color: #b3b3b3;
+  margin: 0;
+}
+
+.artist-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.genre-tag {
+  background-color: #2a2a2a;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}

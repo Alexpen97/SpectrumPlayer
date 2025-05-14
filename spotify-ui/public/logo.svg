@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="120" ry="120" fill="#0A0A14"/>
+
+  <!-- LAYER 1: COLOR BARS (Bottom Layer) -->
+  <!-- Red bar -->
+  <rect x="200" y="176" width="220" height="27" fill="#FF5252"/>
+  <!-- Orange bar -->
+  <rect x="200" y="203" width="220" height="27" fill="#FFAB40"/>
+  <!-- Yellow bar -->
+  <rect x="200" y="230" width="220" height="27" fill="#FFEB3B"/>
+  <!-- Green bar -->
+  <rect x="200" y="257" width="220" height="27" fill="#66BB6A"/>
+  <!-- Blue bar -->
+  <rect x="200" y="284" width="220" height="27" fill="#42A5F5"/>
+  <!-- Purple bar -->
+  <rect x="200" y="311" width="220" height="25" fill="#7E57C2"/>
+
+  <!-- LAYER 2: LIGHT BEAM -->
+  <line x1="100" y1="256" x2="200" y2="256" stroke="white" stroke-width="6" opacity="0.9"/>
+
+  <!-- LAYER 3: TRIANGLE (Top Layer) -->
+  <!-- Gradient for triangle -->
+  <defs>
+    <linearGradient id="prismGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3A3A48"/>
+      <stop offset="70%" stop-color="#252534"/>
+      <stop offset="100%" stop-color="#15151F"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Triangle prism -->
+  <path d="M 200,176 L 280,256 L 200,336 Z" fill="url(#prismGradient)" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Play button -->
+  <path d="M 220,226 L 260,256 L 220,286 Z" fill="white" opacity="0.8"/>
+  
+  <!-- Highlight -->
+  <line x1="200" y1="196" x2="240" y2="236" stroke="white" stroke-width="1" opacity="0.4"/>
+</svg>

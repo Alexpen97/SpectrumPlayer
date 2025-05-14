@@ -1,0 +1,213 @@
+.download-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    color: #fff;
+  }
+  
+  .loading-download-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .download-button {
+    padding: 10px 24px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .download-button:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.03);
+  }
+  
+  .download-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* Spotify-style button */
+  .spotify-button {
+    background-color: #1ed760;
+    color: #000;
+    border: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .spotify-button:hover:not(:disabled) {
+    background-color: #1fdf64;
+    transform: scale(1.04);
+  }
+  
+  .spotify-button:disabled {
+    background-color: rgba(30, 215, 96, 0.3);
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Check status button */
+  .check-status-button {
+    font-size: 12px;
+    padding: 5px 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .check-status-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+  }
+  
+  .download-message {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .download-message.success {
+    background-color: rgba(30, 215, 96, 0.2);
+    border-left: 3px solid #1ed760;
+  }
+  
+  .download-message.error {
+    background-color: rgba(240, 55, 55, 0.2);
+    border-left: 3px solid #f03737;
+  }
+  
+  .download-status-container {
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+  
+  .download-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .download-status-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  .status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .status-badge.downloading {
+    background-color: rgba(30, 215, 96, 0.2);
+    color: #1ed760;
+  }
+  
+  .status-badge.completed {
+    background-color: rgba(30, 215, 96, 0.3);
+    color: #1ed760;
+  }
+  
+  .status-badge.failed {
+    background-color: rgba(240, 55, 55, 0.2);
+    color: #f03737;
+  }
+  
+  .progress-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .progress-bar {
+    flex-grow: 1;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin-right: 10px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: #1ed760;
+    transition: width 0.5s ease;
+  }
+  
+  .progress-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    min-width: 40px;
+    text-align: right;
+  }
+  
+  .estimated-time {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 8px;
+  }
+  
+  .error-message {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: rgba(240, 55, 55, 0.1);
+    border-radius: 4px;
+  }
+  
+  .error-title {
+    margin: 0 0 8px 0;
+    font-weight: 600;
+    color: #f03737;
+  }
+  
+  .error-detail {
+    margin: 0;
+    font-size: 13px;
+    max-height: 120px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+/* Completed Download Styles */
+.completed-actions {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.import-info {
+  font-size: 14px;
+  color: #1ed760;
+  text-align: center;
+  font-weight: 500;
+  padding: 8px 16px;
+  background-color: rgba(30, 215, 96, 0.1);
+  border-radius: 16px;
+  margin-bottom: 10px;
+}

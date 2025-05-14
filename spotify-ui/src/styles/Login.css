@@ -1,0 +1,140 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #121212;
+  font-family: 'Circular', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  background-color: #181818;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo h1 {
+  color: #1DB954;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.login-tabs {
+  display: flex;
+  border-bottom: 1px solid #282828;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: #AAAAAA;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 8px;
+  cursor: pointer;
+  position: relative;
+  flex: 1;
+  transition: color 0.3s;
+  white-space: nowrap;
+}
+
+.tab-button.active {
+  color: #FFFFFF;
+}
+
+.tab-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #1DB954;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  color: #FFFFFF;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  background-color: #282828;
+  border: 1px solid #404040;
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #1DB954;
+  outline: none;
+}
+
+.login-button {
+  background-color: #1DB954;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 30px;
+  padding: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #1ED760;
+}
+
+.login-button:disabled {
+  background-color: #1DB95480;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #f15e6c;
+  font-size: 14px;
+  margin: 16px 0;
+}
+
+.success-message {
+  color: #1DB954;
+  font-size: 14px;
+  margin: 16px 0;
+}
+
+.login-info {
+  margin-top: 24px;
+  color: #AAAAAA;
+  font-size: 12px;
+  text-align: center;
+}
+
+.login-info p {
+  margin: 5px 0;
+}

@@ -1,0 +1,183 @@
+.library {
+  padding-bottom: 40px;
+}
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.library-header h1 {
+  font-size: 32px;
+  color: white;
+}
+
+.library-controls {
+  display: flex;
+  gap: 16px;
+}
+
+.create-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.create-btn:hover {
+  transform: scale(1.05);
+}
+
+.library-tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.library-tabs button {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 0;
+  margin-bottom: -1px;
+  cursor: pointer;
+  position: relative;
+}
+
+.library-tabs button.active {
+  color: white;
+  border-bottom: 2px solid #1DB954;
+  padding-bottom: 8px;
+}
+
+.library-tabs button.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #1db954;
+}
+
+.list-header {
+  display: grid;
+  grid-template-columns: 4fr 2fr 1fr;
+  padding: 0 16px 8px;
+  margin-bottom: 8px;
+  color: #b3b3b3;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.albums-list .list-header {
+  grid-template-columns: 4fr 2fr 1fr;
+}
+
+.artists-list .list-header {
+  grid-template-columns: 5fr 2fr;
+}
+
+.list-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-item {
+  display: grid;
+  grid-template-columns: 4fr 2fr 1fr;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  color: white;
+  text-decoration: none;
+}
+
+.albums-list .list-item {
+  grid-template-columns: 4fr 2fr 1fr;
+}
+
+.artists-list .list-item {
+  grid-template-columns: 5fr 2fr;
+}
+
+.list-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.list-col-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.item-number {
+  color: #b3b3b3;
+  width: 16px;
+}
+
+.list-col-title img {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.artists-list .list-col-title img {
+  border-radius: 50%;
+}
+
+.item-name {
+  font-weight: 600;
+}
+
+.list-col-owner, .list-col-tracks, .list-col-followers, .list-col-artist, .list-col-year {
+  display: flex;
+  align-items: center;
+  color: #b3b3b3;
+}
+
+/* Section header styles */
+.tracks-section {
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 16px;
+}
+
+.section-header h2 {
+  font-size: 24px;
+  color: white;
+  margin: 0;
+}
+
+.view-all-link {
+  color: #b3b3b3;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.view-all-link:hover {
+  color: white;
+  text-decoration: underline;
+}

@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:spotifydb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  mail:
+    host: localhost
+    port: 1025
+    username: 
+    password: 
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+    
+server:
+  port: 8080
+
+# Custom application properties
+app:
+  auth:
+    # Token validity in minutes
+    api-key-validity: 30
+    # Whether to require authentication for API access
+    require-auth: true
