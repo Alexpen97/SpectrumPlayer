@@ -53,30 +53,37 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
   
-  build-electron-app:
-    name: Build Electron App
+  build-tauri-app:
+    name: Build Tauri App
     runs-on: windows-latest
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: spectrum-ui/package-lock.json
       
-      - name: Install dependencies
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: Install dependencies (Windows)
         run: |
           cd spectrum-ui
           npm ci
       
-      - name: Build Electron app
+      - name: Install Tauri CLI
+        run: npm install -g @tauri-apps/cli
+      
+      - name: Build Tauri app
         run: |
           cd spectrum-ui
-          npm run electron-pack
+          npm run build
+          npx tauri build
       
       - name: Get version from tag
         id: get_version
@@ -90,8 +97,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            spectrum-ui/dist/*.exe
-            spectrum-ui/dist/*.dmg
-            spectrum-ui/dist/*.AppImage
+            spectrum-ui/src-tauri/target/release/bundle/msi/*.msi
+            spectrum-ui/src-tauri/target/release/bundle/nsis/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -10,7 +10,8 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  /* Removed margin-top as it's already handled in TitleBar.css */
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .app-content {

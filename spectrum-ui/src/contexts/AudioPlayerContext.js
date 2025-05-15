@@ -1,6 +1,7 @@
 import React, { createContext, useState, useRef, useEffect, useCallback } from 'react';
-import ReactPlayerAudio from '../components/ReactPlayerAudio';
-import { albumService, recentlyPlayedTrackService, libraryService } from '../services/api';
+import NativeAudioPlayer from '../components/NativeAudioPlayer';
+import { albumService, libraryService, recentlyPlayedTrackService } from '../services/api';
+import { isTauri } from '../services/tauri-api-bridge';
 
 // Create the context
 export const AudioPlayerContext = createContext();
@@ -14,6 +15,8 @@ export const AudioPlayerProvider = ({ children }) => {
   const [volume, setVolume] = useState(0.7);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [playbackUrl, setPlaybackUrl] = useState(null);
+  const [isSeeking, setIsSeeking] = useState(false);
   const [queue, setQueue] = useState([]);
   const [queueIndex, setQueueIndex] = useState(0);
   const [shuffle, setShuffle] = useState(false);
@@ -23,15 +26,25 @@ export const AudioPlayerProvider = ({ children }) => {
   // Ref for the player component
   const playerRef = useRef(null);
   
-  // Playback URL state
-  const [playbackUrl, setPlaybackUrl] = useState('');
-  
   // Flag to prevent track ended handler from firing multiple times
   const trackEndedHandlingRef = useRef(false);
+  
+  // Track if we've already processed a player ready event for the current track
+  const playerReadyProcessedRef = useRef(false);
   
   // Handle player ready event
   const handlePlayerReady = (player) => {
     console.log('Player ready');
+    
+    // Skip if we've already processed a player ready event for this track
+    if (playerReadyProcessedRef.current) {
+      console.log('Skipping redundant player ready event');
+      return;
+    }
+    
+    // Mark as processed
+    playerReadyProcessedRef.current = true;
+    
     playerRef.current = player;
     setIsLoading(false);
     
@@ -93,10 +106,10 @@ export const AudioPlayerProvider = ({ children }) => {
     }
   };
   
-  // Play a track using ReactPlayerAudio for better FLAC support
-  const playTrack = (track) => {
-    if (!track || !track.streamUrl) {
-      setError('This track is not available for streaming');
+  // Play a track using NativeAudioPlayer for better compatibility in Tauri
+  const playTrack = async (track) => {
+    if (!track) {
+      setError('Invalid track data');
       return;
     }
     
@@ -105,69 +118,144 @@ export const AudioPlayerProvider = ({ children }) => {
     setIsLoading(true);
     setCurrentTrack(track);
     
-    // Log track information
-    console.log('Playing track:', track);
-    console.log('Stream URL:', track.streamUrl);
+    // Reset the player ready processed flag for the new track
+    playerReadyProcessedRef.current = false;
     
-    // Add album to recently played if it exists
-    if (track.albumId) {
-      albumService.addToRecentlyPlayed(track.albumId)
-        .then(() => {
-          console.log('Added album to recently played:', track.albumId);
-        })
-        .catch(error => {
-          console.error('Failed to add album to recently played:', error);
-        });
+    try {
+      // Get the stream URL - either from the track object or by generating it
+      let streamUrl = track.streamUrl;
+      
+      // If no streamUrl is provided but we have a track ID, generate the URL
+      if (!streamUrl && track.id) {
+        try {
+          console.log('Generating stream URL for track:', track.id);
+          // Use the async getStreamUrl function from the API service
+          streamUrl = await albumService.getStreamUrl(track.id);
+          console.log('Generated stream URL:', streamUrl);
+          
+          // Validate the URL to ensure it's properly formatted
+          try {
+            new URL(streamUrl);
+            console.log('Stream URL is valid');
+          } catch (urlError) {
+            console.error('Invalid stream URL format:', urlError);
+            // Try to fix the URL if it's malformed
+            if (streamUrl.includes('//')) {
+              streamUrl = streamUrl.replace(/([^:]\/)\/+/g, "$1");
+              console.log('Fixed stream URL:', streamUrl);
+            }
+          }
+          
+          // For release builds, ensure we have a valid URL with proper protocol
+          if (!streamUrl.startsWith('http://') && !streamUrl.startsWith('https://')) {
+            const baseUrl = localStorage.getItem('apiBaseUrl') || 'http://localhost:8080';
+            if (streamUrl.startsWith('/')) {
+              streamUrl = `${baseUrl}${streamUrl}`;
+            } else {
+              streamUrl = `${baseUrl}/${streamUrl}`;
+            }
+            console.log('Corrected stream URL with base URL:', streamUrl);
+          }
+        } catch (error) {
+          console.error('Failed to generate stream URL:', error);
+          setError('Failed to generate stream URL');
+          setIsLoading(false);
+          return;
+        }
+      }
+      
+      if (!streamUrl) {
+        setError('This track is not available for streaming');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Add timestamp to prevent caching issues in Tauri
+      if (isTauri()) {
+        streamUrl = `${streamUrl}${streamUrl.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+        console.log('Added timestamp to URL for Tauri:', streamUrl);
+      }
+      
+      // Log track information
+      console.log('Playing track:', track);
+      console.log('Stream URL:', streamUrl);
+      
+      // Add album to recently played if it exists
+      if (track.albumId) {
+        albumService.addToRecentlyPlayed(track.albumId)
+          .then(() => {
+            console.log('Added album to recently played:', track.albumId);
+          })
+          .catch(error => {
+            console.error('Failed to add album to recently played:', error);
+          });
+      }
+      
+      // Add track to recently played
+      if (track.id) {
+        recentlyPlayedTrackService.addToRecentlyPlayed(track.id)
+          .then(() => {
+            console.log('Added track to recently played:', track.id);
+          })
+          .catch(error => {
+            console.error('Failed to add track to recently played:', error);
+          });
+      }
+      
+      // Check if track is liked
+      const trackId = track.lidarrTrackId || track.id;
+      if (trackId) {
+        console.log('Checking liked status for track ID:', trackId);
+        libraryService.isTrackLiked(trackId)
+          .then(response => {
+            setIsTrackLiked(response.data.liked);
+            console.log('Track liked status:', response.data.liked);
+          })
+          .catch(error => {
+            console.error('Failed to check if track is liked:', error);
+            setIsTrackLiked(false);
+          });
+      } else {
+        console.warn('Track has no valid ID to check liked status');
+        setIsTrackLiked(false);
+      }
+      
+      // Update the playback URL and the NativeAudioPlayer component will handle it
+      setPlaybackUrl(streamUrl);
+      setIsPlaying(true);
+    } catch (error) {
+      console.error('Error playing track:', error);
+      setError(`Error playing track: ${error.message}`);
+      setIsLoading(false);
     }
-    
-    // Add track to recently played
-    if (track.id) {
-      recentlyPlayedTrackService.addToRecentlyPlayed(track.id)
-        .then(() => {
-          console.log('Added track to recently played:', track.id);
-        })
-        .catch(error => {
-          console.error('Failed to add track to recently played:', error);
-        });
-    }
-    
-    // Check if track is liked
-    const trackId = track.lidarrTrackId || track.id;
-    if (trackId) {
-      console.log('Checking liked status for track ID:', trackId);
-      libraryService.isTrackLiked(trackId)
-        .then(response => {
-          setIsTrackLiked(response.data.liked);
-          console.log('Track liked status:', response.data.liked);
-        })
-        .catch(error => {
-          console.error('Failed to check if track is liked:', error);
-          setIsTrackLiked(false);
-        });
-    } else {
-      console.warn('Track has no valid ID to check liked status');
-      setIsTrackLiked(false);
-    }
-    
-    // Simply update the playback URL and the ReactPlayerAudio component will handle it
-    setPlaybackUrl(track.streamUrl);
-    setIsPlaying(true);
   };
   
   // Play a track and set the queue
-  const playTrackWithQueue = (track, tracksQueue, startIndex = 0) => {
+  const playTrackWithQueue = async (track, tracksQueue, startIndex = 0) => {
     setQueue(tracksQueue);
     setQueueIndex(startIndex);
-    playTrack(track);
+    await playTrack(track);
   };
   
-  // Toggle play/pause
-  const togglePlay = () => {
+  // Reference to track the last time play was toggled
+  const lastToggleTimeRef = useRef(0);
+  
+  // Toggle play/pause with debouncing to prevent rapid state changes
+  const togglePlay = useCallback(() => {
     if (!currentTrack) return;
     
+    // Prevent rapid toggling
+    if (Date.now() - lastToggleTimeRef.current < 300) {
+      console.log('Ignoring rapid toggle');
+      return;
+    }
+    
+    // Update the last toggle time
+    lastToggleTimeRef.current = Date.now();
+    
     console.log(isPlaying ? 'Pausing playback' : 'Resuming playback');
-    setIsPlaying(!isPlaying);
-  };
+    setIsPlaying(prevState => !prevState);
+  }, [isPlaying, currentTrack]);
   
   // Seek to a specific time
   const seekTo = useCallback((time) => {
@@ -179,14 +267,26 @@ export const AudioPlayerProvider = ({ children }) => {
       // Make sure time is within valid bounds
       const validTime = Math.max(0, Math.min(time, duration));
       
-      // ReactPlayer handles seeking directly in seconds
-      playerRef.current.seekTo(validTime, 'seconds');
+      // Set seeking state to prevent progress updates during seek
+      setIsSeeking(true);
+      
+      // Use the seekTo method from our NativeAudioPlayer
+      if (typeof playerRef.current.seekTo === 'function') {
+        playerRef.current.seekTo(validTime);
+      } else if (playerRef.current.currentTime !== undefined) {
+        // Direct access to the audio element
+        playerRef.current.currentTime = validTime;
+      }
       
       // Update time state immediately for better UI responsiveness
       setCurrentTime(validTime);
+      
+      // Reset seeking state after a short delay
+      setTimeout(() => setIsSeeking(false), 100);
     } catch (error) {
       console.error('Error during seek operation:', error);
       setError(`Seek error: ${error.message}`);
+      setIsSeeking(false);
     }
   }, [currentTrack, duration]);
   
@@ -199,7 +299,7 @@ export const AudioPlayerProvider = ({ children }) => {
   };
   
   // Play next track in queue with Howler
-  const playNextTrack = () => {
+  const playNextTrack = async () => {
     console.log('playNextTrack called with queue length:', queue.length, 'current index:', queueIndex);
     
     if (queue.length === 0) {
@@ -221,26 +321,33 @@ export const AudioPlayerProvider = ({ children }) => {
                  'wrapping around:', nextIndex < queueIndex);
     }
     
-    if (nextIndex >= 0 && nextIndex < queue.length && queue[nextIndex]) {
-      // Valid next track exists
-      console.log('Playing next track:', queue[nextIndex].title);
-      setQueueIndex(nextIndex);
-      
-      // Howler handles track transitions much better
-      playTrack(queue[nextIndex]);
-    } else {
-      console.error('Invalid next track index:', nextIndex, 'Queue length:', queue.length);
+    // Check if we're at the end of the queue and repeat is off
+    if (nextIndex === 0 && !repeat && queueIndex === queue.length - 1) {
+      console.log('End of queue reached and repeat is off - stopping playback');
+      setIsPlaying(false);
+      return;
+    }
+    
+    // Update queue index and play the track
+    setQueueIndex(nextIndex);
+    try {
+      await playTrack(queue[nextIndex]);
+    } catch (error) {
+      console.error('Error playing next track:', error);
+      setError(`Error playing next track: ${error.message}`);
       // Try to recover by playing first track if possible
-      if (queue.length > 0 && queue[0]) {
-        console.log('Recovering by playing first track in queue');
-        setQueueIndex(0);
-        playTrack(queue[0]);
+      if (queue.length > 0) {
+        try {
+          await playTrack(queue[0]);
+        } catch (e) {
+          console.error('Recovery attempt failed:', e);
+        }
       }
     }
   };
   
   // Play previous track in queue
-  const playPreviousTrack = () => {
+  const playPreviousTrack = async () => {
     if (queue.length === 0) return;
     
     // If current time > 3 seconds, restart the current track
@@ -262,7 +369,12 @@ export const AudioPlayerProvider = ({ children }) => {
     }
     
     setQueueIndex(prevIndex);
-    playTrack(queue[prevIndex]);
+    try {
+      await playTrack(queue[prevIndex]);
+    } catch (error) {
+      console.error('Error playing previous track:', error);
+      setError(`Error playing previous track: ${error.message}`);
+    }
   };
   
   // Toggle shuffle mode - unchanged from before
@@ -339,24 +451,38 @@ export const AudioPlayerProvider = ({ children }) => {
   
   return (
     <AudioPlayerContext.Provider value={value}>
-      {/* Render the ReactPlayerAudio component here to handle FLAC playback */}
-      {currentTrack && (
-        <ReactPlayerAudio
+      {/* Render the NativeAudioPlayer component here to handle audio playback */}
+      {playbackUrl && (
+        <NativeAudioPlayer
           url={playbackUrl}
           playing={isPlaying}
           volume={volume}
-          onReady={handlePlayerReady}
+          onReady={(player) => {
+            console.log('Player ready');
+            playerRef.current = player;
+            setIsLoading(false);
+          }}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
-          onEnded={handleTrackEnded}
+          onEnded={() => {
+            console.log('Track ended, playing next track');
+            playNextTrack();
+          }}
           onError={(e) => {
             console.error('Error playing track:', e);
-            setError(`Error playing track: ${currentTrack?.title}`);
+            setError(`Error playing track: ${currentTrack?.title || 'Unknown track'}`);
             setIsLoading(false);
             setIsPlaying(false);
           }}
-          onDuration={setDuration}
-          onProgress={handleProgress}
+          onDuration={(duration) => {
+            console.log('Duration received:', duration);
+            setDuration(duration);
+          }}
+          onProgress={(progress) => {
+            if (!isSeeking) {
+              setCurrentTime(progress.playedSeconds);
+            }
+          }}
         />
       )}
       {children}

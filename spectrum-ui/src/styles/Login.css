@@ -138,3 +138,49 @@
 .login-info p {
   margin: 5px 0;
 }
+
+/* Settings section styles */
+.settings-section {
+  background-color: #282828;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.settings-section h3 {
+  color: #FFFFFF;
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.settings-section p {
+  color: #AAAAAA;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.settings-button {
+  background-color: #333333;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #404040;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.3s;
+}
+
+.settings-button:hover {
+  background-color: #404040;
+}
+
+.info-note {
+  background-color: rgba(29, 185, 84, 0.1);
+  border-left: 3px solid #1DB954;
+  padding: 8px 12px;
+  font-size: 13px !important;
+  color: #b3b3b3 !important;
+}

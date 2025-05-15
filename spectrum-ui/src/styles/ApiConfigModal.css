@@ -1,0 +1,125 @@
+.api-config-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.api-config-modal {
+  background-color: #282828;
+  border-radius: 8px;
+  padding: 24px;
+  width: 450px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.api-config-modal h2 {
+  margin-top: 0;
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.api-config-modal .form-group {
+  margin-bottom: 16px;
+}
+
+.api-config-modal label {
+  display: block;
+  margin-bottom: 8px;
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+.api-config-modal input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+}
+
+.api-config-modal input:focus {
+  outline: none;
+  border-color: #1DB954;
+}
+
+.api-config-modal .button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.api-config-modal .save-button,
+.api-config-modal .cancel-button {
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+}
+
+.api-config-modal .save-button {
+  background-color: #1DB954;
+  color: white;
+}
+
+.api-config-modal .cancel-button {
+  background-color: transparent;
+  color: #b3b3b3;
+  border: 1px solid #b3b3b3;
+}
+
+.api-config-modal .save-button:hover {
+  background-color: #1ed760;
+}
+
+.api-config-modal .cancel-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.api-config-modal .success-message {
+  padding: 8px;
+  background-color: rgba(29, 185, 84, 0.2);
+  color: #1DB954;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.api-config-modal .error-message {
+  padding: 8px;
+  background-color: rgba(255, 0, 0, 0.2);
+  color: #ff5252;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.api-config-modal .info-message {
+  padding: 8px;
+  background-color: rgba(0, 120, 215, 0.2);
+  color: #0078d7;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.api-config-info {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #333;
+}
+
+.api-config-info p {
+  color: #b3b3b3;
+  font-size: 13px;
+  margin: 8px 0;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './styles/App.css';
+import { isTauri } from './services/tauri-bridge';
 
 // Import pages
 import Home from './pages/Home';
@@ -17,6 +18,7 @@ import Sidebar from './components/Sidebar';
 import Player from './components/Player';
 import SearchBar from './components/SearchBar';
 import TitleBar from './components/TitleBar';
+import TauriTitleBar from './components/TauriTitleBar';
 
 // Import audio player context
 import AudioPlayerProvider from './contexts/AudioPlayerContext';
@@ -127,8 +129,9 @@ function App() {
           <Route path="/*" element={
             isAuthenticated ? (
               <div className="app">
-                <TitleBar />
-                <div className="app-container" style={{ paddingTop: '32px' }}>
+                {/* Use TauriTitleBar for Tauri builds, TitleBar for Electron */}
+                {isTauri() ? <TauriTitleBar /> : <TitleBar />}
+                <div className="app-container">
                   <Sidebar />
                   <div className="app-content">
                     <div className="top-bar">

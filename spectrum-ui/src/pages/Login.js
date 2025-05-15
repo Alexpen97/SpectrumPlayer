@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService, updateApiBaseUrl } from '../services/api';
+import ApiConfigModal from '../components/ApiConfigModal';
+import { isTauri } from '../services/tauri-bridge';
 import '../styles/Login.css';
 
 const Login = () => {
@@ -15,6 +17,14 @@ const Login = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [keySent, setKeySent] = useState(false);
+  const [showApiConfig, setShowApiConfig] = useState(false);
+  
+  // Show a welcome message for Tauri users
+  useEffect(() => {
+    if (isTauri()) {
+      setMessage('Welcome to Spectrum Player running in Tauri! Please configure your API connection if needed.');
+    }
+  }, []);
   
   // Generate a unique device ID if it doesn't exist
   useEffect(() => {
@@ -119,22 +129,16 @@ const Login = () => {
     }
   };
   
-  // Handle saving API configuration
-  const handleSaveApiConfig = (e) => {
-    e.preventDefault();
-    setError('');
-    setMessage('');
-    
-    try {
-      // Validate the URL format
-      new URL(apiBaseUrl);
-      
-      // Update the API base URL
-      updateApiBaseUrl(apiBaseUrl);
-      setMessage(`API base URL saved: ${apiBaseUrl}`);
-    } catch (error) {
-      setError('Please enter a valid URL (including http:// or https://)');
-    }
+  // Open API configuration modal
+  const openApiConfig = () => {
+    setShowApiConfig(true);
+  };
+  
+  // Close API configuration modal
+  const closeApiConfig = () => {
+    setShowApiConfig(false);
+    // Refresh the API base URL from localStorage
+    setApiBaseUrl(localStorage.getItem('apiBaseUrl') || 'http://localhost:8080');
   };
   
   return (
@@ -283,31 +287,42 @@ const Login = () => {
         )}
         
         {activeTab === 'settings' && (
-          <form onSubmit={handleSaveApiConfig} className="login-form">
-            <div className="form-group">
-              <label htmlFor="api-base-url">API Base URL</label>
-              <input
-                type="text"
-                id="api-base-url"
-                value={apiBaseUrl}
-                onChange={(e) => setApiBaseUrl(e.target.value)}
-                placeholder="e.g., http://localhost:8080"
-                required
-              />
+          <div className="login-form">
+            <div className="settings-section">
+              <h3>API Configuration</h3>
+              <p>Current API URL: {apiBaseUrl}</p>
+              <button 
+                type="button" 
+                className="settings-button"
+                onClick={openApiConfig}
+              >
+                Configure API Connection
+              </button>
             </div>
-            {error && <div className="error-message">{error}</div>}
+            
+            <div className="settings-section">
+              <h3>Environment</h3>
+              <p>Running in: {isTauri() ? 'Tauri' : 'Web Browser'}</p>
+              {isTauri() && (
+                <p className="info-note">
+                  Note: When running in Tauri, you may need to use your computer's IP address 
+                  instead of localhost to connect to your API server.
+                </p>
+              )}
+            </div>
+            
             {message && <div className="success-message">{message}</div>}
-            <button type="submit" className="login-button">
-              Save Configuration
-            </button>
+            {error && <div className="error-message">{error}</div>}
+            
             <div className="login-info">
-              <p>Configure the API server address before logging in.</p>
-              <p>This setting will be saved for future sessions.</p>
-              <p>Default: http://localhost:8080</p>
+              <p>Configure your Spectrum Player settings here.</p>
             </div>
-          </form>
+          </div>
         )}
       </div>
+      
+      {/* API Configuration Modal */}
+      {showApiConfig && <ApiConfigModal onClose={closeApiConfig} />}
     </div>
   );
 };

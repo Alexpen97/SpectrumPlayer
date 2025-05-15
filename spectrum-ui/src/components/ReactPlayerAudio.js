@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
+import { isTauri } from '../services/tauri-api-bridge';
 
 const ReactPlayerAudio = ({ 
   url, 
@@ -45,6 +46,27 @@ const ReactPlayerAudio = ({
     }
   };
 
+  // Log URL for debugging
+  useEffect(() => {
+    if (url) {
+      console.log('ReactPlayerAudio received URL:', url);
+    }
+  }, [url]);
+
+  // Special handling for Tauri environment
+  const isTauriEnv = isTauri();
+  useEffect(() => {
+    if (isTauriEnv && url) {
+      console.log('Running in Tauri environment with URL:', url);
+    }
+  }, [isTauriEnv, url]);
+
+  // If URL is not valid or not provided, don't render the player
+  if (!url) {
+    console.warn('ReactPlayerAudio: No URL provided');
+    return null;
+  }
+
   return (
     <div style={{ display: 'none' }}>
       <ReactPlayer
@@ -60,14 +82,35 @@ const ReactPlayerAudio = ({
             attributes: {
               crossOrigin: 'anonymous',
             },
-            forceSupportNative: true
+            forceSupportNative: true,
+            forceHLS: false,
+            forceVideo: false
           }
         }}
         onReady={handleReady}
-        onPlay={onPlay}
-        onPause={onPause}
-        onEnded={onEnded}
+        onPlay={() => {
+          console.log('ReactPlayer: onPlay event');
+          if (onPlay) onPlay();
+        }}
+        onPause={() => {
+          console.log('ReactPlayer: onPause event');
+          if (onPause) onPause();
+        }}
+        onEnded={() => {
+          console.log('ReactPlayer: onEnded event');
+          if (onEnded) onEnded();
+        }}
         onError={(e) => {
+          // Detailed error logging
+          console.error('ReactPlayer error:', e);
+          if (e && e.target) {
+            console.error('Error details:', { 
+              error: e.target.error,
+              src: e.target.src,
+              readyState: e.target.readyState
+            });
+          }
+          
           // Ignore AbortError since it's common during seeking
           if (e && e.name === 'AbortError') {
             console.log('Ignoring AbortError - common during seeking');
@@ -75,9 +118,15 @@ const ReactPlayerAudio = ({
           }
           if (onError) onError(e);
         }}
-        onDuration={onDuration}
-        onProgress={onProgress}
-        onSeek={() => {
+        onDuration={(duration) => {
+          console.log('ReactPlayer: Duration received:', duration);
+          if (onDuration) onDuration(duration);
+        }}
+        onProgress={(progress) => {
+          if (onProgress) onProgress(progress);
+        }}
+        onSeek={(seconds) => {
+          console.log('ReactPlayer: Seek to', seconds);
           // When seek completes, reset the seeking state
           setIsSeeking(false);
           // If it was playing before seeking, ensure it continues playing

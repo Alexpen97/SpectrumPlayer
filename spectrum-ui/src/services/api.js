@@ -1,14 +1,32 @@
 import axios from 'axios';
+import { isTauri, getApiClient } from './tauri-api-bridge';
+import { storage } from './tauri-bridge';
 
-// Get API base URL from localStorage or use default
-const getApiBaseUrl = () => {
-  return localStorage.getItem('apiBaseUrl') || 'http://localhost:8080';
+// Get API base URL from storage or use default
+const getApiBaseUrl = async () => {
+  try {
+    const url = await storage.getItem('apiBaseUrl');
+    return url || 'http://localhost:8080';
+  } catch (error) {
+    console.error('Error getting API base URL:', error);
+    return 'http://localhost:8080';
+  }
+};
+
+// Synchronous version for compatibility with existing code
+const getApiBaseUrlSync = () => {
+  try {
+    return localStorage.getItem('apiBaseUrl') || 'http://localhost:8080';
+  } catch (error) {
+    console.error('Error getting API base URL synchronously:', error);
+    return 'http://localhost:8080';
+  }
 };
 
 // Allow external components to update the API base URL
-export const updateApiBaseUrl = (newUrl) => {
-  localStorage.setItem('apiBaseUrl', newUrl);
-  // Update the axios instance's baseURL
+export const updateApiBaseUrl = async (newUrl) => {
+  await storage.setItem('apiBaseUrl', newUrl);
+  // Update the API instance's baseURL
   api.defaults.baseURL = newUrl;
   return newUrl;
 };
@@ -42,13 +60,16 @@ const getDeviceId = () => {
   return deviceId;
 };
 
-const api = axios.create({
-  baseURL: getApiBaseUrl(),
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
-});
+// Create the appropriate API client based on the environment
+const api = isTauri() 
+  ? getApiClient(getApiBaseUrlSync())
+  : axios.create({
+      baseURL: getApiBaseUrlSync(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
 
 // Add a request interceptor to ensure content type is set correctly for all requests
 api.interceptors.request.use(function (config) {
@@ -75,10 +96,48 @@ api.interceptors.request.use(function (config) {
     config.headers['X-API-Key'] = apiKey;
   }
   
+  // Log request details in development mode
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`API Request: ${config.method.toUpperCase()} ${config.url}`, {
+      baseURL: config.baseURL,
+      headers: config.headers,
+      data: config.data
+    });
+  }
+  
   return config;
 }, function (error) {
+  console.error('API Request Error:', error);
   return Promise.reject(error);
 });
+
+// Add a response interceptor for better error handling
+api.interceptors.response.use(
+  response => {
+    // Log successful responses in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`API Response: ${response.status} ${response.config.url}`, response.data);
+    }
+    return response;
+  },
+  error => {
+    // Handle authentication errors
+    if (error.response && error.response.status === 401) {
+      console.error('Authentication error:', error.response.data);
+      // You might want to redirect to login page or refresh tokens here
+    }
+    
+    // Log all API errors
+    console.error('API Error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    
+    return Promise.reject(error);
+  }
+);
 
 // Track related API calls
 export const trackService = {
@@ -104,7 +163,30 @@ export const trackService = {
   deleteTrack: (id) => api.delete(`/api/tracks/${id}`),
   
   // Get streaming URL for a track
-  getStreamUrl: (trackId) => `${API_BASE_URL}/api/stream/track/${trackId}`,
+  getStreamUrl: async (trackId) => {
+    try {
+      // Use the async version to ensure we get a proper URL in production builds
+      const baseUrl = await getApiBaseUrl();
+      
+      // Create the stream URL
+      const streamUrl = `${baseUrl}/api/stream/track/${trackId}`;
+      
+      console.log(`Generated stream URL: ${streamUrl}`);
+      
+      // For Tauri builds, ensure the URL is properly formatted
+      if (isTauri()) {
+        // Ensure the URL is properly encoded and has no double slashes
+        const cleanUrl = streamUrl.replace(/([^:]\/)\/+/g, "$1");
+        console.log(`Tauri-optimized stream URL: ${cleanUrl}`);
+        return cleanUrl;
+      }
+      
+      return streamUrl;
+    } catch (error) {
+      console.error('Error generating stream URL:', error);
+      throw error;
+    }
+  },
   
   // Get audio metadata
   getAudioMetadata: (trackId) => api.get(`/api/stream/metadata/${trackId}`)
@@ -160,12 +242,12 @@ export const userService = {
   addToRecentlyPlayedPlaylists: (userId, playlistId) => api.post(`/api/users/${userId}/recently-played/playlists/${playlistId}`),
   
   // Validate the API key stored in localStorage
-  validateStoredApiKey() {
+  async validateStoredApiKey() {
     const apiKey = localStorage.getItem('apiKey');
   
     if (!apiKey) {
       console.log('No API key found in localStorage');
-      return Promise.resolve(null);
+      return null;
     }
     
     console.log('Validating stored API key...');
@@ -178,8 +260,12 @@ export const userService = {
         'Content-Type': 'application/json'
       }
     };
+    
+    // Get the API base URL properly
+    const baseUrl = await getApiBaseUrl();
+    console.log('Using API base URL:', baseUrl);
   
-    return axios.post(`${API_BASE_URL}/api/auth/validate-key`, { apiKey }, config)
+    return axios.post(`${baseUrl}/api/auth/validate-key`, { apiKey }, config)
       .then(response => {
         console.log('API key validation response:', response.data);
         if (response.data && response.data.valid) {
@@ -314,12 +400,23 @@ export const playlistService = {
   
   // Create a new playlist
   createPlaylist: (playlistData) => {
-    // If we're receiving just name and userId, use the new endpoint
-    if (typeof playlistData === 'object' && playlistData.name && playlistData.userId) {
+    console.log('Creating playlist with data:', playlistData);
+    
+    // Use the /create endpoint with URL parameters for simpler creation
+    if (playlistData.name && playlistData.userId) {
       return api.post(`/api/playlists/create?name=${encodeURIComponent(playlistData.name)}&userId=${playlistData.userId}`);
     }
-    // Otherwise, use the original endpoint for backward compatibility
-    return api.post('/api/playlists', playlistData);
+    
+    // For full playlist object creation, ensure it matches the backend model
+    const formattedPlaylist = {
+      name: playlistData.name,
+      description: playlistData.description || '',
+      coverImageUrl: playlistData.coverImageUrl || 'https://placehold.co/300x300/gray/white?text=Playlist',
+      isPublic: playlistData.public !== undefined ? playlistData.public : true,
+      ownerUsername: playlistData.ownerUsername || 'user'
+    };
+    
+    return api.post('/api/playlists', formattedPlaylist);
   },
   
   // Update an existing playlist

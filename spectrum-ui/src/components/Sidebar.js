@@ -31,35 +31,41 @@ function Sidebar() {
     // Get the current user ID from localStorage
     const userData = localStorage.getItem('user');
     let userId = 1; // Default to admin user ID if not found
+    let username = 'user';
     
     if (userData) {
       try {
-        const user = JSON.parse(userData);
-        userId = user.id;
+        const userObj = JSON.parse(userData);
+        userId = userObj.id;
+        username = userObj.username || 'user';
       } catch (e) {
         console.error('Error parsing user data:', e);
       }
     }
     
-    // Use the /create endpoint with just name and userId as URL parameters
-    fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/playlists/create?name=${newPlaylistName}&userId=${userId}`, {
-      method: 'POST'
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      setPlaylists([...playlists, data]);
-      setNewPlaylistName('');
-      setShowCreateForm(false);
-    })
-    .catch(error => {
-      console.error('Error creating playlist:', error);
-      alert('Failed to create playlist. Please try again.');
-    });
+    // Create a proper playlist object
+    const playlistData = {
+      name: newPlaylistName,
+      description: '',
+      public: true,
+      ownerUsername: username,
+      userId: userId
+    };
+    
+    console.log('Creating playlist with data:', playlistData);
+    
+    // Use the playlistService to create a new playlist
+    playlistService.createPlaylist(playlistData)
+      .then(response => {
+        console.log('Playlist created successfully:', response.data);
+        setPlaylists([...playlists, response.data]);
+        setNewPlaylistName('');
+        setShowCreateForm(false);
+      })
+      .catch(error => {
+        console.error('Error creating playlist:', error);
+        alert('Failed to create playlist. Please try again.');
+      });
   };
 
   return (

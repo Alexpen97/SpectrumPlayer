@@ -1,0 +1,23 @@
+/* TauriTitleBar.css */
+/* Reset any extra spacing */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Ensure the app container starts right after the title bar */
+.app {
+  margin-top: 32px !important; /* Height of title bar */
+}
+
+/* Make sure the title bar doesn't take up extra space */
+.app-container {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Ensure content is properly positioned */
+.app-content {
+  padding-top: 0;
+}
